@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import random
-import dash_html_components as html
+from itertools import combinations
 
 # Function to randomly pick two applicants
 def pick_applicants(df):
@@ -65,7 +65,6 @@ def fight(round_num, applicant_pairing):
                 ignore_index=True,
             )
 
-            children.append(html.Hr())
             a.attacks -= 1
             b.health -= a.damage
 
@@ -100,3 +99,29 @@ def determine_winner(applicants):
         return applicants[0].name
     if applicants[1].health > applicants[0].health:
         return applicants[1].name
+
+
+def melee(df):
+    '''
+    Run all combinations
+    '''
+    output = {"Candidate 1": [], "Candidate 2": [], "Winner": []}
+    comb = combinations(list(df.index), 2)
+    for c in comb:
+        applicants = [c[0], c[1]]
+        applicant_pairing = list()
+        for applicant in applicants:
+            applicant_pairing.append(Applicant(df, applicant))
+        applicant_1 = applicant_pairing[0]
+        applicant_2 = applicant_pairing[1]
+
+        round_num = 0
+        while applicant_1.health > 0 and applicant_2.health > 0:
+            fight(round_num, [applicant_1, applicant_2])
+            round_num += 1
+
+        winner = determine_winner(applicant_pairing)
+        output["Candidate 1"].append(applicant_1.name)
+        output["Candidate 2"].append(applicant_2.name)
+        output["Winner"].append(winner)
+    return pd.DataFrame(output)

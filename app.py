@@ -12,6 +12,9 @@ import sd_material_ui
 import pandas as pd
 import brawl
 
+from itertools import combinations
+
+
 external_stylesheets = [
     "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
 ]
@@ -51,7 +54,7 @@ def return_func_content():
             #     id="selection_div",
             #     children=[dcc.Dropdown(id="dropdown_1"), dcc.Dropdown(id="dropdown_2")],
             # ),
-            html.Div(id='output-data-upload'),
+            dcc.Loading(children=[html.Div(id='output-data-upload')], type="cube"),
         ]
     )
 
@@ -119,6 +122,9 @@ def parse_contents(contents, filename, date):
         round_num += 1
         results = results.append(log)
     winner = brawl.determine_winner([applicant_1, applicant_2])
+
+    # Run All
+    melee_winner = brawl.melee(df)
     return html.Div(
         [
             html.Div(
@@ -159,19 +165,54 @@ def parse_contents(contents, filename, date):
                                     html.Div(["Matchup"], className="card-title"),
                                     html.Div(
                                         [
-                                            html.H4(f"{applicants[0]} VS {applicants[1]}"),
-                                            html.H5(f"Winner : {winner}"),
-                                            html.H6(
-                                                f"Number of Rounds : {int(max(results.Round.values))}"
-                                            ),
-                                            html.Label("Results"),
-                                            dash_table.DataTable(
-                                                data=results.to_dict('records'),
-                                                columns=[
-                                                    {'name': i, 'id': i} for i in results.columns
+                                            dcc.Tabs(
+                                                id="tabs",
+                                                children=[
+                                                    dcc.Tab(
+                                                        label="1v1",
+                                                        children=[
+                                                            html.H4(
+                                                                f"{applicants[0]} VS {applicants[1]}"
+                                                            ),
+                                                            html.H5(f"Winner : {winner}"),
+                                                            html.H6(
+                                                                f"Number of Rounds : {int(max(results.Round.values))}"
+                                                            ),
+                                                            html.Label("Results"),
+                                                            dash_table.DataTable(
+                                                                data=results.to_dict('records'),
+                                                                columns=[
+                                                                    {'name': i, 'id': i}
+                                                                    for i in results.columns
+                                                                ],
+                                                                style_table={'overflowX': 'scroll'},
+                                                            ),
+                                                        ],
+                                                    ),
+                                                    dcc.Tab(
+                                                        label="Melee",
+                                                        children=[
+                                                            html.H5(
+                                                                f"Melee Winner : {melee_winner.Winner.describe().top}"
+                                                            ),
+                                                            html.H6(
+                                                                f"Melee Wins : {melee_winner.Winner.describe().freq}"
+                                                            ),
+                                                            html.Label("Results"),
+                                                            dash_table.DataTable(
+                                                                data=melee_winner.to_dict(
+                                                                    'records'
+                                                                ),
+                                                                columns=[
+                                                                    {'name': i, 'id': i}
+                                                                    for i in melee_winner.columns
+                                                                ],
+                                                                style_table={'overflowX': 'scroll'},
+                                                            ),
+                                                        ],
+                                                    ),
                                                 ],
-                                                style_table={'overflowX': 'scroll'},
-                                            ),
+                                            )
                                         ],
                                         className="card-content",
                                     ),

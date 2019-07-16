@@ -1,7 +1,12 @@
-# Aditya Mookerjee - Robin Healthcare Coding Challenge
+# Aditya Mookerjee - Dualing Web App
 ## aditya.mookerjee@gmail.com
 ### Mon 15 July
 https://adi-rh.herokuapp.com/
+
+**Process** : 
+1. User uploads a .CSV file (see example `applicants.csv`)
+2. App randomly selects two `applicants` to ***battle***
+3. App renders some output, including two tabs : a 1v1 battle, a bonus ***melee*** battle with all combinations
 
 The application is built in Python using the Dash Library.
 

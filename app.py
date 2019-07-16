@@ -127,7 +127,7 @@ def parse_contents(contents, filename, date):
                         [
                             html.Div(
                                 [
-                                    html.Div(["Uplaod Info"], className="card-title"),
+                                    html.Div(["Upload Info"], className="card-title"),
                                     html.Div(
                                         [
                                             html.H5(f"Filename : {filename}"),

@@ -29,6 +29,16 @@ def return_func_content():
             #     stepCount=2,
             #     stepLabels=['Upload Data', 'Select Fighters'],
             # ),
+            html.H6("Select whether to run through all combinations"),
+            dcc.Dropdown(
+                id="options_dropdown",
+                options=[
+                    {'label': '1v1', 'value': '1v1'},
+                    {'label': '1v1 + Run Through All combinations!', 'value': 'all'},
+                ],
+                value='1v1',
+            ),
+            dcc.RadioItems(value='1v1'),
             html.Div(
                 id="upload_div",
                 children=[
@@ -93,7 +103,7 @@ app.layout = html.Div(
 )
 
 
-def parse_contents(contents, filename, date):
+def parse_contents(contents, filename, date, options_dropdown):
     content_type, content_string = contents.split(',')
 
     decoded = base64.b64decode(content_string)
@@ -124,7 +134,12 @@ def parse_contents(contents, filename, date):
     winner = brawl.determine_winner([applicant_1, applicant_2])
 
     # Run All
-    melee_winner = brawl.melee(df)
+    if options_dropdown == "all":
+        melee_winner = brawl.melee(df)
+    else:
+        melee_winner = pd.DataFrame(
+            {"Winner": ["Select the other option!", "Select the other option!"]}
+        )
     return html.Div(
         [
             html.Div(
@@ -256,13 +271,13 @@ def parse_contents(contents, filename, date):
 
 @app.callback(
     Output('output-data-upload', 'children'),
-    [Input('upload-data', 'contents')],
+    [Input('upload-data', 'contents'), Input("options_dropdown", "value")],
     [State('upload-data', 'filename'), State('upload-data', 'last_modified')],
 )
-def update_output(list_of_contents, list_of_names, list_of_dates):
+def update_output(list_of_contents, options_dropdown, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
-            parse_contents(c, n, d)
+            parse_contents(c, n, d, options_dropdown)
             for c, n, d in zip(list_of_contents, list_of_names, list_of_dates)
         ]
         return children

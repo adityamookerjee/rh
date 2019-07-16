@@ -161,6 +161,9 @@ def parse_contents(contents, filename, date):
                                         [
                                             html.H4(f"{applicants[0]} VS {applicants[1]}"),
                                             html.H5(f"Winner : {winner}"),
+                                            html.H6(
+                                                f"Number of Rounds : {int(max(results.Round.values))}"
+                                            ),
                                             html.Label("Results"),
                                             dash_table.DataTable(
                                                 data=results.to_dict('records'),

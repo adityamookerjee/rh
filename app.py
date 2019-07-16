@@ -58,7 +58,7 @@ def return_func_content():
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-
+app.title = "Adi Mookerjee RH Assignment"
 app.layout = html.Div(
     [
         html.Div(

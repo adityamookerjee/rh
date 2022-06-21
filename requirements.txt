@@ -15,7 +15,7 @@ dash_html_components == 0.16.0
 dash_table == 3.6.0
 
 # brawl.py: 2
-numpy == 1.16.2
+numpy == 1.22.0
 
 # app.py: 12
 # brawl.py: 1

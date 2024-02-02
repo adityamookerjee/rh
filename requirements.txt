@@ -2,7 +2,7 @@
 # https://github.com/damnever/pigar
 
 # app.py: 7
-dash == 0.42.0
+dash == 2.15.0
 
 # app.py: 8
 dash_core_components == 0.47.0

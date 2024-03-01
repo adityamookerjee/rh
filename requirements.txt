@@ -9,7 +9,7 @@ dash_core_components == 0.47.0
 
 # app.py: 9
 # brawl.py: 4
-dash_html_components == 0.16.0
+dash_html_components == 2.0.0
 
 # app.py: 10
 dash_table == 3.6.0
